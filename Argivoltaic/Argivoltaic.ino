@@ -31,6 +31,4 @@ void loop() {
 // Shading section: read thermometer/light sensor (depending on design decision). Rotate solar panels to increase/decrease effective surface area as needed.
 // Air circulation section: not sure under what conditions we intend to circulate air. On a timer?
 // Fertilizer: Dispense fertilizer on a timer, or with the water?
-
-// PJ
 }
