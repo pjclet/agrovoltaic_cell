@@ -27,8 +27,8 @@
   https://www.arduino.cc/en/Tutorial/BuiltInExamples/AnalogInput
 */
 
-int tempsensorPin = A0;    // select the input pin for the potentiometer
-int heatingPin = 13;      // select the pin for the heating
+int tempsensorPin = PLACEHOLDER;    // select the input pin for the potentiometer
+int heatingPin = PLACEHOLDER;      // select the pin for the heating
 int tempsensorValue = 0;  // variable to store the value coming from the sensor
 
 
