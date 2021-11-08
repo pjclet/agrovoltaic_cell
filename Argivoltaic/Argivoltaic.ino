@@ -1,8 +1,12 @@
-#include <OneWire.h>
-#include <DallasTemperature.h>
+//#include <OneWire.h>
+//#include <DallasTemperature.h>
+#include <DS18B20.h>
 
+DS18B20 ds(2);
 // Data wire is plugged into pin PLACEHOLDER on the Arduino
 #define ONE_WIRE_BUS PLACEHOLDER
+#define heating PORT
+
 
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
 OneWire oneWire(ONE_WIRE_BUS);
@@ -12,10 +16,12 @@ DallasTemperature sensors(&oneWire);
 
 // set up const vars for ports used for each sensor, motor
 void setup() {
-  // put your setup code here, to run once:
+  
   Serial.begin(9600);
-  // Start up the library
-  sensors.begin(); // IC Default 9 bit. If you have troubles consider upping it 12. Ups the delay giving the IC more time to process the temperature measurement
+  Serial.print("Devices: ");
+  Serial.println(ds.getNumberOfDevices());
+  Serial.println();
+
 }
 
 void loop() {
@@ -24,9 +30,52 @@ void loop() {
 // Thermo section: read thermometer (see amazon comments). If below minimum temperature, turn on heating element. If above maximum temperature, turn off heating element
   // call sensors.requestTemperatures() to issue a global temperature
   // request to all devices on the bus
-  sensors.requestTemperatures();
-  Serial.print("Temperature for Device 1 is: ");
-  Serial.print(sensors.getTempCByIndex(0)); // Why "byIndex"? You can have more than one IC on the same bus. 0 refers to the first IC on the wire
+  while (ds.selectNext()) {
+    switch (ds.getFamilyCode()) {
+      case MODEL_DS18S20:
+        Serial.println("Model: DS18S20/DS1820");
+        break;
+      case MODEL_DS1822:
+        Serial.println("Model: DS1822");
+        break;
+      case MODEL_DS18B20:
+        Serial.println("Model: DS18B20");
+        break;
+      default:
+        Serial.println("Unrecognized Device");
+        break;
+    }
+
+    uint8_t address[8];
+    ds.getAddress(address);
+
+    Serial.print("Address:");
+    for (uint8_t i = 0; i < 8; i++) {
+      Serial.print(" ");
+      Serial.print(address[i]);
+    }
+    Serial.println();
+
+    Serial.print("Resolution: ");
+    Serial.println(ds.getResolution());
+
+    Serial.print("Power Mode: ");
+    if (ds.getPowerMode()) {
+      Serial.println("External");
+    } else {
+      Serial.println("Parasite");
+    }
+
+    Serial.print("Temperature: ");
+    Serial.print(ds.getTempC());
+    Serial.print(" C / ");
+    Serial.print(ds.getTempF());
+    Serial.println(" F");
+    Serial.println();
+  }
+
+  delay(10000);
+
 // Water section: read moisture sensor. Turn pump on/off as above
 // Shading section: read thermometer/light sensor (depending on design decision). Rotate solar panels to increase/decrease effective surface area as needed.
 // Air circulation section: not sure under what conditions we intend to circulate air. On a timer?
