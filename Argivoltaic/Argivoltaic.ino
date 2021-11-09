@@ -1,26 +1,28 @@
-//#include <OneWire.h>
-//#include <DallasTemperature.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
 #include <DS18B20.h>
 
 DS18B20 ds(2);
-// Data wire is plugged into pin PLACEHOLDER on the Arduino
-#define ONE_WIRE_BUS PLACEHOLDER
+// Data wire is plugged into pin 2 on the Arduino
+OneWire oneWire(2);
+DallasTemperature dTemp(oneWire);
 #define heating PORT
 
 
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
-OneWire oneWire(ONE_WIRE_BUS);
+//OneWire oneWire(ONE_WIRE_BUS);
 
 // Pass our oneWire reference to Dallas Temperature.
-DallasTemperature sensors(&oneWire);
+//DallasTemperature sensors(&oneWire);
 
 // set up const vars for ports used for each sensor, motor
 void setup() {
+
   
-  Serial.begin(9600);
+  // Serial.begin(9600);
   Serial.print("Devices: ");
-  Serial.println(ds.getNumberOfDevices());
-  Serial.println();
+  //Serial.println(ds.getNumberOfDevices());
+  //Serial.println();
 
 }
 
@@ -30,21 +32,23 @@ void loop() {
 // Thermo section: read thermometer (see amazon comments). If below minimum temperature, turn on heating element. If above maximum temperature, turn off heating element
   // call sensors.requestTemperatures() to issue a global temperature
   // request to all devices on the bus
-  while (ds.selectNext()) {
-    switch (ds.getFamilyCode()) {
-      case MODEL_DS18S20:
-        Serial.println("Model: DS18S20/DS1820");
-        break;
-      case MODEL_DS1822:
-        Serial.println("Model: DS1822");
-        break;
-      case MODEL_DS18B20:
-        Serial.println("Model: DS18B20");
-        break;
-      default:
-        Serial.println("Unrecognized Device");
-        break;
-    }
+//  while (ds.selectNext()) {
+//    switch (ds.getFamilyCode()) {
+//      case MODEL_DS18S20:
+//        Serial.println("Model: DS18S20/DS1820");
+//        break;
+//      case MODEL_DS1822:
+//        Serial.println("Model: DS1822");
+//        break;
+//      case MODEL_DS18B20:
+//        Serial.println("Model: DS18B20");
+//        break;
+//      default:
+//        Serial.println("Unrecognized Device");
+//        break;
+//    }
+    dTemp->requestTemperatures();
+    Serial.println("Temp @ Index: 0:" + String(dtemp->getTempFByIndex(0)));
 
     uint8_t address[8];
     ds.getAddress(address);
