@@ -19,7 +19,7 @@ will be 0x23 (by default).
 #include <BH1750.h>
 #include <Wire.h>
 
-BH1750 lightMeter1(0x23);
+BH1750 lightMeter1(0x5C);
 BH1750 lightMeter2(0x5C);
 
 void setup() {
@@ -43,7 +43,7 @@ void loop() {
   Serial.print("Light: ");
   Serial.print(lux1);
   Serial.print("  ");
-  Serial.print(lux1);
+  Serial.print(lux2);
   Serial.println(" lx");
   delay(1000);
 }

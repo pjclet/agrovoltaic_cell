@@ -4,9 +4,13 @@ A simple light follower
 author: Arturo Guadalupi <a.guadalupi@arduino.cc>
  */
 #include <Servo.h>
+#include <BH1750.h>
+#include <Wire.h>
+BH1750 lightMeter1(0x23);
+BH1750 lightMeter2(0x5C);
 Servo myservo;
-int A0_val; // bottom sensor
-int A1_val; // top sensor
+int lux1; // bottom sensor
+int lux2; // top sensor
 int val = 90;
 int diff;
 const int threshold = 50;
@@ -17,15 +21,18 @@ void setup() {
   pinMode(A1, INPUT);
   myservo.attach(11);
   myservo.write(val);
+  Wire.begin();
+  lightMeter1.begin();
+  lightMeter2.begin();
 }
 void loop() {
-  A0_val = analogRead(A0); //reading data from sensors
-  A1_val = analogRead(A1); 
   unsigned long currentMillis = millis();
-  diff = abs(A1_val-A0_val); //checking the difference between the two sensors
   if (currentMillis - previousMillis >= interval) {
+    float lux1 = lightMeter1.readLightLevel();
+    float lux2 = lightMeter2.readLightLevel();
+    diff = abs(lux1 - lux2); //checking the difference between the two sensors
     previousMillis = currentMillis;
-    if ((A1_val > A0_val) && (diff > threshold))
+    if ((lux2 > lux1) && (diff > threshold))
       {
       if (val < 180) //if different from max val
         {
@@ -33,7 +40,7 @@ void loop() {
         myservo.write(val);
         }
       }
-    if((A0_val > A1_val) && (diff > threshold))
+    if((lux1 > lux2) && (diff > threshold))
       {
       if (val > 0) //if different from min val
         {
