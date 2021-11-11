@@ -13,15 +13,15 @@ int A2_val;
 int A3_val;
 int val = 90;
 int diff;
-const int threshold = PLACEHOLDER;
+const int threshold = 50;
 unsigned long previousMillis = 0; // will store last time servo was updated
-const long interval = PLACEHOLDER;       // interval at which to update (milliseconds)
+const long interval = 1000;       // interval at which to update (milliseconds)
 void setup() {
   pinMode(A0, INPUT); 
   pinMode(A1, INPUT);
   pinMode(A2, INPUT);
   pinMode(A3, INPUT);
-  myservo.attach(PLACEHOLDER);
+  myservo.attach(11);
   myservo.write(val);
 }
 void loop() {

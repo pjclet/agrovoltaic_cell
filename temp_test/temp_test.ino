@@ -27,6 +27,8 @@ const long failsafeHeaterOn = 5000; // how long heater can stay on if temp senso
 const long failsafeHeaterOff = 5000; // how long heater must stay off if temp sensor is unresponsive
 unsigned long offMillis = 0; // when heater turned off
 unsigned long onMillis = 0; // when heater turned on
+const long interval = 1000; // how often heater is updated
+unsigned long prevMillis = 0; // when heater was last updated
 
 void setup(void)
 {
@@ -40,33 +42,34 @@ void setup(void)
 void loop(void){ 
   // Call sensors.requestTemperatures() to issue a global temperature and Requests to all devices on the bus
   unsigned long currentMillis = millis();
-  sensors.requestTemperatures(); 
+  if(currentMillis - prevMillis > interval){
+    prevMillis = currentMillis;
+    sensors.requestTemperatures(); 
+    Serial.print("Celsius temperature: ");
+    // Why "byIndex"? You can have more than one IC on the same bus. 0 refers to the first IC on the wire
+    temp = sensors.getTempCByIndex(0);
+    Serial.print(temp); 
+    Serial.print(" - Fahrenheit temperature: ");
+    Serial.println(sensors.getTempFByIndex(0));
+    Serial.print(currentMillis);
+    Serial.print("\t");
+    Serial.print(onMillis);
+    Serial.print("\t");
+    Serial.println(heaterState);
+    if ((temp < cold) and (currentMillis-offMillis>failsafeHeaterOff)) {
+      if(heaterState == LOW){
+        onMillis = currentMillis;
+      }
+      heaterState = HIGH;
   
-  Serial.print("Celsius temperature: ");
-  // Why "byIndex"? You can have more than one IC on the same bus. 0 refers to the first IC on the wire
-  temp = sensors.getTempCByIndex(0);
-  Serial.print(temp); 
-  Serial.print(" - Fahrenheit temperature: ");
-  Serial.println(sensors.getTempFByIndex(0));
-  Serial.print(currentMillis);
-  Serial.print("\t");
-  Serial.print(onMillis);
-  Serial.print("\t");
-  Serial.println(heaterState);
-  if ((temp < cold) and (currentMillis-offMillis>failsafeHeaterOff)) {
-    if(heaterState == LOW){
-      onMillis = currentMillis;
     }
-    heaterState = HIGH;
-
-  }
-  if ((temp > hot) or (currentMillis-onMillis>failsafeHeaterOn)) {
-    if(heaterState == HIGH){
-      offMillis = currentMillis;
+    if ((temp > hot) or (currentMillis-onMillis>failsafeHeaterOn)) {
+      if(heaterState == HIGH){
+        offMillis = currentMillis;
+      }
+      heaterState = LOW;
     }
-    heaterState = LOW;
+    // set the pump with the pumpState of the variable:
+    digitalWrite(heaterPin, heaterState);
   }
-  // set the pump with the pumpState of the variable:
-  digitalWrite(heaterPin, heaterState);
-  delay(1000);
 }
