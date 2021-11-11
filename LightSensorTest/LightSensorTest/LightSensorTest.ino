@@ -19,7 +19,8 @@ will be 0x23 (by default).
 #include <BH1750.h>
 #include <Wire.h>
 
-BH1750 lightMeter;
+BH1750 lightMeter1(0x23);
+BH1750 lightMeter2(0x5C);
 
 void setup() {
   Serial.begin(9600);
@@ -30,15 +31,19 @@ void setup() {
   // For Wemos / Lolin D1 Mini Pro and the Ambient Light shield use
   // Wire.begin(D2, D1);
 
-  lightMeter.begin();
+  lightMeter1.begin();
+  lightMeter2.begin();
 
 //  Serial.println(F("BH1750 Test begin"));
 }
 
 void loop() {
-  float lux = lightMeter.readLightLevel();
+  float lux1 = lightMeter1.readLightLevel();
+  float lux2 = lightMeter2.readLightLevel();
   Serial.print("Light: ");
-  Serial.print(lux);
+  Serial.print(lux1);
+  Serial.print("  ");
+  Serial.print(lux1);
   Serial.println(" lx");
   delay(1000);
 }
