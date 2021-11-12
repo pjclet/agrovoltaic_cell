@@ -4,10 +4,13 @@ A simple light follower
 author: Arturo Guadalupi <a.guadalupi@arduino.cc>
  */
 #include <Servo.h>
-#include <BH1750.h>
+//#include <BH1750.h>
+#include <BH1750_WE.h
 #include <Wire.h>
-BH1750 lightMeter1(0x23);
-BH1750 lightMeter2(0x5C);
+//BH1750 lightMeter1(0x23);
+//BH1750 lightMeter2(0x5C);
+BH1750_WE lightMeter1(0x5C);
+BH1750_WE lightMeter2(0x23);
 Servo myservo;
 int lux1; // bottom sensor
 int lux2; // top sensor
@@ -22,14 +25,18 @@ void setup() {
   myservo.attach(11);
   myservo.write(val);
   Wire.begin();
-  lightMeter1.begin();
-  lightMeter2.begin();
+//  lightMeter1.begin();
+//  lightMeter2.begin();
+    lightMeter1.init();
+    lightMeter2.init();
 }
 void loop() {
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis >= interval) {
-    float lux1 = lightMeter1.readLightLevel();
-    float lux2 = lightMeter2.readLightLevel();
+//    float lux1 = lightMeter1.readLightLevel();
+//    float lux2 = lightMeter2.readLightLevel();
+    float lux1 = lightMeter1.getLux();
+    float lux2 = lightMeter2.getLux();
     diff = abs(lux1 - lux2); //checking the difference between the two sensors
     previousMillis = currentMillis;
     if ((lux2 > lux1) && (diff > threshold))
