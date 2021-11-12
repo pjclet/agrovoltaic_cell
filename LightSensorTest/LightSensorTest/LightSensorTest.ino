@@ -16,11 +16,14 @@ to 0.7VCC voltage (e.g. you've connected it to VCC) the sensor address will be
 will be 0x23 (by default).
 */
 
-#include <BH1750.h>
+//#include <BH1750.h>
+#include <BH1750_WE.h>
 #include <Wire.h>
 
-BH1750 lightMeter1(0x5C);
-BH1750 lightMeter2(0x5C);
+//BH1750 lightMeter1(0x5C);
+//BH1750 lightMeter2(0x23);
+BH1750_WE lightMeter1(0x5C);
+BH1750_WE lightMeter2(0x23);
 
 void setup() {
   Serial.begin(9600);
@@ -31,15 +34,19 @@ void setup() {
   // For Wemos / Lolin D1 Mini Pro and the Ambient Light shield use
   // Wire.begin(D2, D1);
 
-  lightMeter1.begin();
-  lightMeter2.begin();
+//  lightMeter1.begin();
+//  lightMeter2.begin();
+  lightMeter1.init();
+  lightMeter2.init();
 
 //  Serial.println(F("BH1750 Test begin"));
 }
 
 void loop() {
-  float lux1 = lightMeter1.readLightLevel();
-  float lux2 = lightMeter2.readLightLevel();
+//  float lux1 = lightMeter1.readLightLevel();
+//  float lux2 = lightMeter2.readLightLevel();
+  float lux1 = lightMeter1.getLux();
+  float lux2 = lightMeter2.getLux();
   Serial.print("Light: ");
   Serial.print(lux1);
   Serial.print("  ");
