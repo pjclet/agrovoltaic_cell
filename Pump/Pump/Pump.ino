@@ -7,22 +7,27 @@
 */
 
 // constants used to set a pin number:
-const int pumpPin =  PLACEHOLDER;// the number of the pump pin
+const int pumpPin =  7;// the number of the pump pin
+const int humidPin = A0;// the number of humidity sensor pin
 
-const int dry = PLACEHOLDER; // when humidity drops below this, turn pump on
-const int wet = PLACEHOLDER; // when humidity rises above this, turn pump off
+const int dry = 0; // when humidity drops below this, turn pump on
+const int wet = 0; // when humidity rises above this, turn pump off
 
 
 int pumpState = LOW;             // used to set pump
 
-int water = PLACEHOLDER; // humidity read from thermometer
+int water; // humidity read from thermometer
 
 void setup() {
+  Serial.begin(9600);
   // set the digital pin as output:
   pinMode(pumpPin, OUTPUT);
+  pinMode(humidPin, INPUT);
 }
 
 void loop() {
+    water = analogRead(humidPin);
+    Serial.println(water);
     if (water < dry) {
       pumpState = HIGH;
     }
@@ -32,5 +37,5 @@ void loop() {
 
     // set the pump with the pumpState of the variable:
     digitalWrite(pumpPin, pumpState);
+    delay(1000);
   }
-}
