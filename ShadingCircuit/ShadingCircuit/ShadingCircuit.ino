@@ -5,7 +5,7 @@ author: Arturo Guadalupi <a.guadalupi@arduino.cc>
  */
 #include <Servo.h>
 //#include <BH1750.h>
-#include <BH1750_WE.h
+#include <BH1750_WE.h>
 #include <Wire.h>
 //BH1750 lightMeter1(0x23);
 //BH1750 lightMeter2(0x5C);
