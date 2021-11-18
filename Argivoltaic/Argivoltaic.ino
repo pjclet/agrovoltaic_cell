@@ -90,18 +90,18 @@ void loop() {
         myservo.write(servoPos);
         }
       }
-    // moisture loop      
+    // moisture loop
+    moistureValue = analogRead(moisturePin);  
+    moistureState = LOW;
+    digitalWrite(moistureVCC, moistureState); //stop power 
     if (moistureValue >= 30){
       digitalWrite(pumpPin, HIGH);        
     } else {
       digitalWrite(pumpPin, LOW);
     }
+  }
+  if((currentMillis - prevMillis > interval - moistureDuration) and (moistureState == LOW)){
     moistureState = HIGH;
     digitalWrite(moistureVCC, moistureState);
-  }
-  if((currentMillis - prevMillis > moistureDuration) and (moistureState == HIGH)){
-    moistureValue = analogRead(moisturePin);  
-    moistureState = LOW;
-    digitalWrite(moistureVCC, moistureState); //stop power 
   }
 }
