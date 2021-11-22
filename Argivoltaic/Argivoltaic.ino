@@ -107,13 +107,13 @@ void shading(){
     myservo.write(servoPos);
   } else {
     if ((lux2 > lux1) && (luxDiff > threshold)) {
-      if (servoPos < 174) { //avoid setting servo above its max
+      if (servoPos < 179-increment) { //avoid setting servo above its max
         servoPos+=increment;
         myservo.write(servoPos);
       }
     }
     if((lux1 > lux2) && (luxDiff > threshold)) {
-      if (servoPos > 6) { //avoid setting servo below its min
+      if (servoPos > 1+increment) { //avoid setting servo below its min
         servoPos-=increment;
         myservo.write(servoPos);
       }
