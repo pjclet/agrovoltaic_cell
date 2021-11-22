@@ -31,6 +31,7 @@ int lux2; // top sensor
 int servoPos = 90; // starting servo posiiton
 int luxDiff; // difference in lux reading
 const int threshold = 50; // change angle when diff>threshold
+const int increment = 5; // change in servo angle per loop
 
 // watering system
 int moisturePin = 0;    // input pin for the Soil moisture sensor
@@ -39,6 +40,9 @@ int moistureValue = 0;  // variable to store the value coming from the sensor
 int moistureVCC = 10;   // moisutre sensor connected to digital pin for power so it can be turned on/off
 int moistureState = LOW; // moisture sensor will be turned on/off
 const int moistureDuration = 100; // how long mousture sensor takes to read a value
+const int dry = 30; // when moisture drops below this, turn pump on
+const int wet = 50; // when moisutre rises above this, turn pump off
+int pumpState = LOW; // whether pump is on/off
 
 void setup() {
   Serial.begin(9600);
@@ -98,16 +102,21 @@ void shading(){
   float lux1 = lightMeter1.getLux();
   float lux2 = lightMeter2.getLux();
   luxDiff = abs(lux1 - lux2);
-  if ((lux2 > lux1) && (luxDiff > threshold)) {
-    if (servoPos < 174) { //avoid setting servo above its max
-      servoPos+=5;
-      myservo.write(servoPos);
+  if(pumpState == HIGH){
+    servoPos = 90;
+    myservo.write(servoPos);
+  } else {
+    if ((lux2 > lux1) && (luxDiff > threshold)) {
+      if (servoPos < 174) { //avoid setting servo above its max
+        servoPos+=increment;
+        myservo.write(servoPos);
+      }
     }
-  }
-  if((lux1 > lux2) && (luxDiff > threshold)) {
-    if (servoPos > 6) { //avoid setting servo below its min
-      servoPos-=5;
-      myservo.write(servoPos);
+    if((lux1 > lux2) && (luxDiff > threshold)) {
+      if (servoPos > 6) { //avoid setting servo below its min
+        servoPos-=increment;
+        myservo.write(servoPos);
+      }
     }
   }
 }
@@ -116,9 +125,12 @@ void moisture(){
   moistureValue = analogRead(moisturePin);  
   moistureState = LOW;
   digitalWrite(moistureVCC, moistureState); //stop power 
-  if (moistureValue >= 30){
-    digitalWrite(pumpPin, HIGH);        
-  } else {
-    digitalWrite(pumpPin, LOW);
+  if (moistureValue < dry) {
+    pumpState = HIGH;
+    digitalWrite(pumpPin, pumpState);        
+  }
+  if (moistureValue > wet) {
+    pumpState = LOW;
+    digitalWrite(pumpPin, pumpState);
   }
 }
