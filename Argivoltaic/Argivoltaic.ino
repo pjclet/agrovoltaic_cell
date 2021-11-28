@@ -45,6 +45,7 @@ const int wet = 50; // when moisutre rises above this, turn pump off
 int pumpState = LOW; // whether pump is on/off
 
 void setup() {
+  // serial setup
   Serial.begin(9600);
   // heater setup
   sensors.begin();
