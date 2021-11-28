@@ -1,5 +1,6 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <Adafruit_CCS811.h>
 #include <Servo.h>
 #include <BH1750_WE.h>
 #include <Wire.h>
@@ -45,12 +46,21 @@ const int dry = 30; // when moisture drops below this, turn pump on
 const int wet = 50; // when moisutre rises above this, turn pump off
 int pumpState = LOW; // whether pump is on/off
 
+// atmosphere system
+Adafruit_CCS811 ccs;
+const int fanPin = 4;
+const int errorLED = 13;
+int airQualityThreshold = 1000;
+int fanState = HIGH;
+
 void setup() {
   // serial setup
   Serial.begin(9600);
+  
   // heater setup
   sensors.begin();
   pinMode(heaterPin, OUTPUT);
+  
   // shading setup
   pinMode(A0, INPUT); 
   pinMode(A1, INPUT);
@@ -59,10 +69,22 @@ void setup() {
   Wire.begin();
   lightMeter1.init();
   lightMeter2.init();
+  
   // watering setup
   pinMode(moistureVCC, OUTPUT); 
   pinMode(pumpPin, OUTPUT);
   digitalWrite(moistureVCC, moistureState);
+
+  // atmosphere setup
+  if(!ccs.begin()){
+    Serial.println("Failed to start sensor! Please check your wiring.");
+    while(1);
+  }
+  while(!ccs.available());
+  digitalWrite(fanPin, fanState);
+  
+
+  
 }
 
 void loop() {
@@ -75,6 +97,8 @@ void loop() {
     shading();
     // moisture loop
     moisture();
+    // atmosphere loop
+    atmosphere();
   }
   if((currentMillis - prevMillis > interval - moistureDuration) and (moistureState == LOW)){
     moistureState = HIGH;
@@ -134,5 +158,32 @@ void moisture(){
   if (moistureValue > wet) {
     pumpState = LOW;
     digitalWrite(pumpPin, pumpState);
+  }
+}
+
+void atmosphere(){
+  if (ccs.available()){ // check if sensors are active
+    if (!ccs.readData()){
+      if ((fanState == HIGH) && (ccs.geteCO2() > airQualityThreshold)) {
+        fanState = LOW;
+        digitalWrite(fanPin, fanState);
+        digitalWrite(errorLED, HIGH);
+        Serial.println("CHANGE: Fan off");
+        
+      } else if ((fanState == LOW) && (ccs.geteCO2() <= airQualityThreshold)) {
+        fanState = HIGH;
+        digitalWrite(fanPin, fanState);
+        digitalWrite(errorLED, LOW);
+        Serial.println("CHANGE: Fan on");
+      }
+    } else {
+      Serial.println("ERROR: Air Sensor Inactive");
+      for (int i = 1; i < 10; i++){
+        digitalWrite(errorLED, HIGH);
+        delay(100);
+        digitalWrite(errorLED, LOW);
+        delay(100);
+      }
+    }
   }
 }

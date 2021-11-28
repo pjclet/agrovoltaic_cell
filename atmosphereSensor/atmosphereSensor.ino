@@ -1,4 +1,4 @@
-#include "Adafruit_CCS811.h"
+#include <Adafruit_CCS811.h>
 
 Adafruit_CCS811 ccs;
 const int fanPin = 4;
