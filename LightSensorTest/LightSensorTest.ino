@@ -22,8 +22,8 @@ will be 0x23 (by default).
 
 //BH1750 lightMeter1(0x5C);
 //BH1750 lightMeter2(0x23);
-BH1750_WE lightMeter1(0x5C);
-BH1750_WE lightMeter2(0x23);
+BH1750_WE lightMeter1(0x23);
+BH1750_WE lightMeter2(0x5C);
 
 void setup() {
   Serial.begin(9600);
