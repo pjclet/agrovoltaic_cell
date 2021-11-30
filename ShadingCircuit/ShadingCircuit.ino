@@ -13,7 +13,7 @@ int lux1; // bottom sensor
 int lux2; // top sensor
 int val = 90;
 int diff;
-const int threshold = 50;
+const float threshold = .08; // percent of average of lux values that diff must reach to change angle
 unsigned long previousMillis = 0; // will store last time servo was updated
 const long interval = 1000;       // interval at which to update (milliseconds)
 void setup() {
@@ -36,7 +36,7 @@ void loop() {
     Serial.print(lux2);
     diff = abs(lux1 - lux2); //checking the difference between the two sensors
     previousMillis = currentMillis;
-    if ((lux2 > lux1) && (diff > .08 * (lux1 + lux2)))
+    if ((lux2 > lux1) && (diff > threshold * (lux1 + lux2)))
       {
       if (val < 174) //if different from max val
         {
@@ -44,7 +44,7 @@ void loop() {
         myservo.write(val);
         }
       }
-    if((lux1 > lux2) && (diff > .08 * (lux1 + lux2)))
+    if((lux1 > lux2) && (diff > threshold * (lux1 + lux2)))
       {
       if (val > 6) //if different from min val
         {

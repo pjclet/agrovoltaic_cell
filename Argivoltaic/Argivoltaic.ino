@@ -31,8 +31,9 @@ Servo myservo;
 int lux1; // bottom sensor
 int lux2; // top sensor
 int servoPos = 90; // starting servo posiiton
-int luxDiff; // difference in lux reading
-const int threshold = 50; // change angle when diff>threshold
+float luxDiff; // difference in lux reading
+float luxAvg; // average of lux reading
+const float threshold = .08; // percent of average of lux values that diff must reach to change angle
 const int increment = 5; // change in servo angle per loop
 
 // watering system
@@ -128,17 +129,18 @@ void shading(){
   float lux1 = lightMeter1.getLux();
   float lux2 = lightMeter2.getLux();
   luxDiff = abs(lux1 - lux2);
+  luxAvg = (lux1 + lux2)/2;
   if(pumpState == HIGH){
     servoPos = 90;
     myservo.write(servoPos);
   } else {
-    if ((lux2 > lux1) && (luxDiff > threshold)) {
+    if ((lux2 > lux1) && (luxDiff > threshold*luxAvg)) {
       if (servoPos < 179-increment) { //avoid setting servo above its max
         servoPos+=increment;
         myservo.write(servoPos);
       }
     }
-    if((lux1 > lux2) && (luxDiff > threshold)) {
+    if((lux1 > lux2) && (luxDiff > threshold*luxAvg)) {
       if (servoPos > 1+increment) { //avoid setting servo below its min
         servoPos-=increment;
         myservo.write(servoPos);
