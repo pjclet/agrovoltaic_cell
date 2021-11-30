@@ -4,9 +4,9 @@ arduino_port = "COM5" #serial port of Arduino
 baud = 9600
 fileName="data.csv" #name of the CSV file generated
 ser = serial.Serial(arduino_port, baud)
-print("Connected to Arduino port:" + arduino_port)
+# print("Connected to Arduino port:" + arduino_port)
 file = open(fileName, "a")
-print("Created file")
+# print("Created file")
 samples = 10 #how many samples to collect
 print_labels = False
 line = 0 #start at 0 because our header is 0 (not real data)
@@ -20,10 +20,10 @@ while line <= samples:
             print("Line " + str(line) + ": writing...")
     getData=str(ser.readline().decode())
     data=getData[0:][:-2]
-    print(data)
+    # print(data)
     file.write(data + "\n") #write data with a newline
     line = line+1
 
-print("Data collection complete!")
+# print("Data collection complete!")
 file.close()
 ser.close()

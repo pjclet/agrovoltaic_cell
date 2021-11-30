@@ -16,6 +16,8 @@ void loop() {
     i++;
     Serial.print(i);
     Serial.print(",");
+    Serial.print(i+2);
+    Serial.print(",");
     Serial.println(i*2);
     delay(1000);
   }
