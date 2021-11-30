@@ -7,7 +7,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-// Data wire is conntec to the Arduino digital pin 3
+// Data wire is connected to the Arduino digital pin 3
 #define ONE_WIRE_BUS 3
 
 // Setup a oneWire instance to communicate with any OneWire devices
@@ -23,7 +23,7 @@ const int hot = 29; // when temperature rises above this, turn heater off
 
 int heaterState = LOW;
 int temp;
-const long failsafeHeaterOn = 5000; // how long heater can stay on if temp sensor is unresponsive
+const long failsafeHeaterOn = 15000; // how long heater can stay on if temp sensor is unresponsive
 const long failsafeHeaterOff = 5000; // how long heater must stay off if temp sensor is unresponsive
 unsigned long offMillis = 0; // when heater turned off
 unsigned long onMillis = 0; // when heater turned on

@@ -36,7 +36,7 @@ void loop() {
     Serial.print(lux2);
     diff = abs(lux1 - lux2); //checking the difference between the two sensors
     previousMillis = currentMillis;
-    if ((lux2 > lux1) && (diff > threshold * (lux1 + lux2)))
+    if ((lux2 > lux1) && (diff > threshold * (lux1 + lux2)/2))
       {
       if (val < 174) //if different from max val
         {
@@ -44,7 +44,7 @@ void loop() {
         myservo.write(val);
         }
       }
-    if((lux1 > lux2) && (diff > threshold * (lux1 + lux2)))
+    if((lux1 > lux2) && (diff > threshold * (lux1 + lux2)/2))
       {
       if (val > 6) //if different from min val
         {
