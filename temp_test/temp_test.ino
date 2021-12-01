@@ -45,17 +45,20 @@ void loop(void){
   if(currentMillis - prevMillis > interval){
     prevMillis = currentMillis;
     sensors.requestTemperatures(); 
-    Serial.print("Celsius temperature: ");
+//    Serial.print("Fahrenheit temperature: ");
     // Why "byIndex"? You can have more than one IC on the same bus. 0 refers to the first IC on the wire
-    temp = sensors.getTempCByIndex(0);
+    temp = sensors.getTempFByIndex(0);
     Serial.print(temp); 
-    Serial.print(" - Fahrenheit temperature: ");
-    Serial.println(sensors.getTempFByIndex(0));
+//    Serial.print(" - Celsius temperature: ");
+//    Serial.println(sensors.getTempCByIndex(0));
+    Serial.print(",");
     Serial.print(currentMillis);
-    Serial.print("\t");
-    Serial.print(onMillis);
-    Serial.print("\t");
-    Serial.println(heaterState);
+    Serial.print(",");
+    Serial.print(heaterState);
+    Serial.print("\n");
+//    Serial.print("\t");
+//    Serial.print(onMillis);
+//    Serial.print("\t");
     if ((temp < cold) and (currentMillis-offMillis>failsafeHeaterOff)) {
       if(heaterState == LOW){
         onMillis = currentMillis;
