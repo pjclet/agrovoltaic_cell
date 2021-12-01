@@ -1,8 +1,8 @@
 int sensorPin = 0;    // select the input pin for the Soil moisture sensor
-int pumpPin = 9;
+int pumpPin = 13;
 int sensorValue = 0;  // variable to store the value coming from the sensor
 int sensorVCC = 10;
-
+int dry = 250;
  
 void setup() {
   // declare the ledPin as an OUTPUT:
@@ -22,10 +22,13 @@ void loop() {
   digitalWrite(sensorVCC, LOW);  
   //wait
   delay(1000);//delay time change according to your need          
-  Serial.print("sensor = " );                       
-  Serial.println(sensorValue);          
-  if (sensorValue >= 30){
-    Serial.println("HIGH");
+//  Serial.print("sensor = " );
+  Serial.print(millis());
+  Serial.print(",");                       
+  Serial.print(sensorValue); 
+  Serial.println();         
+  if (sensorValue <= dry){
+//    Serial.println("HIGH");
     digitalWrite(pumpPin, HIGH);        
   } else {
     digitalWrite(pumpPin, LOW);

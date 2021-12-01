@@ -18,8 +18,8 @@ DallasTemperature sensors(&oneWire);
 
 const int heaterPin =  4;// heater pin number
 
-const int cold = 27; // when temperature drops below this, turn heater on
-const int hot = 29; // when temperature rises above this, turn heater off
+const int cold = 60; // when temperature drops below this, turn heater on
+const int hot = 65; // when temperature rises above this, turn heater off
 
 int heaterState = LOW;
 int temp;
@@ -55,7 +55,7 @@ void loop(void){
     Serial.print(currentMillis);
     Serial.print(",");
     Serial.print(heaterState);
-    Serial.print("\n");
+    Serial.println();
 //    Serial.print("\t");
 //    Serial.print(onMillis);
 //    Serial.print("\t");

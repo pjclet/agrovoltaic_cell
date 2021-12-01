@@ -19,7 +19,7 @@ const int cold = 27; // when temperature drops below this, turn heater on
 const int hot = 29; // when temperature rises above this, turn heater off
 int heaterState = LOW; // whether heating is on or not
 int temp; // temperature sensor readout
-const long failsafeHeaterOn = 5000; // how long heater can stay on if temp sensor is unresponsive (millis)
+const long failsafeHeaterOn = 15000; // how long heater can stay on if temp sensor is unresponsive (millis)
 const long failsafeHeaterOff = 5000; // how long heater must stay off if temp sensor is unresponsive (millis)
 unsigned long heaterOffMillis = 0; // when heater turned off
 unsigned long heaterOnMillis = 0; // when heater turned on
@@ -27,7 +27,9 @@ unsigned long heaterOnMillis = 0; // when heater turned on
 // shading subsystem
 BH1750_WE lightMeter1(0x5C);
 BH1750_WE lightMeter2(0x23);
+//A0, A1
 Servo myservo;
+int servoPin 11;
 int lux1; // bottom sensor
 int lux2; // top sensor
 int servoPos = 90; // starting servo posiiton
@@ -65,7 +67,7 @@ void setup() {
   // shading setup
   pinMode(A0, INPUT); 
   pinMode(A1, INPUT);
-  myservo.attach(11);
+  myservo.attach(servoPin);
   myservo.write(servoPos);
   Wire.begin();
   lightMeter1.init();
