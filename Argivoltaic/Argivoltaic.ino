@@ -45,8 +45,8 @@ int moistureValue = 0;  // variable to store the value coming from the sensor
 int moistureVCC = 10;   // moisutre sensor connected to digital pin for power so it can be turned on/off
 int moistureState = LOW; // moisture sensor will be turned on/off
 const int moistureDuration = 100; // how long mousture sensor takes to read a value
-const int dry = 30; // when moisture drops below this, turn pump on
-const int wet = 50; // when moisutre rises above this, turn pump off
+const int dry = 300; // when moisture drops below this, turn pump on
+const int wet = 500; // when moisutre rises above this, turn pump off
 int pumpState = LOW; // whether pump is on/off
 
 // atmosphere system
