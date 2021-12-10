@@ -85,9 +85,6 @@ void setup() {
   }
   while(!ccs.available());
   digitalWrite(fanPin, fanState);
-  
-
-  
 }
 
 void loop() {
