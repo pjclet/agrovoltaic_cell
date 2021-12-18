@@ -29,7 +29,7 @@ BH1750_WE lightMeter1(0x5C);
 BH1750_WE lightMeter2(0x23);
 //A0, A1
 Servo myservo;
-int servoPin 11;
+int servoPin = 11;
 int lux1; // bottom sensor
 int lux2; // top sensor
 int servoPos = 90; // starting servo posiiton
